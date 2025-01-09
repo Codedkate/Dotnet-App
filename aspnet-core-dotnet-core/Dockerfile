@@ -1,8 +1,18 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim
+# Use the official ASP.NET Core runtime as a parent image
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the published web app
-COPY /aspnet-core-dotnet-core/ /app
+# Copy the published output from the host machine to the container
+COPY . .
 
-# Run command
+WORKDIR /app/aspnet-core-dotnet-core
+RUN dotnet restore
+RUN dotnet build
+
+# Expose the port the application runs on
+EXPOSE 80
+
+# Set the entry point to run the application
 ENTRYPOINT ["dotnet", "aspnet-core-dotnet-core.dll"]
